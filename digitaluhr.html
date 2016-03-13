@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Uhr</title>
+
+	<script type="text/javascript">
+
+		function init() {
+			var canvas = document.getElementById("uhr");
+			if (canvas && canvas.getContext)
+				var neueUhr = new Uhr(canvas);
+		}
+
+		function Uhr(canvas) {
+			var context = canvas.getContext("2d");
+			var groesse = Math.min(canvas.width, canvas.height);
+			var interval;
+			
+
+			this.start = function() {
+				interval = setInterval(stellen, 1000);
+			}
+
+			this.stopp = function() {
+				if (interval) clearInterval(interval);
+			}
+
+			function stellen() {
+				// Canvas loeschen
+				//canvas.width = canvas.width;
+				context.fillStyle = "#9FC0D0";
+				context.fillRect(0,0,context.canvas.width, context.canvas.height);
+			    
+
+				// Uhr zeichnen
+				context.fillStyle = "#4F7090";
+				context.fillRect(20,80,context.canvas.width-40,100);
+				context.strokeStyle = "#000000";
+				context.lineWidth = 5;
+				context.strokeRect(20,80,context.canvas.width-40,100);
+				
+				context.fillRect(20,280,context.canvas.width-40,100);
+				context.strokeRect(20,280,context.canvas.width-40,100);
+				
+				context.fillStyle = "#333333";
+				context.font = "30px 'Helvetica'"
+				context.fillText("Stunden", 20,60);
+				context.fillText("Minuten", 20,260);
+				context.lineWidth = 1;
+				context.strokeText("Uhr", 20, 460);
+				
+				
+				// Zeit holen
+				var d = new Date();
+
+				var h = d.getHours();
+				h = h % 12;
+				var m = d.getMinutes();
+				//var m = d.getSeconds();
+
+
+				// Binär zeichnen
+				context.lineWidth = 5;
+				
+				//Stunden
+				for(i=0;i<4;i++){
+					if(((1<<i) & h) > 0)
+						context.fillStyle = "#FF0000";
+					else
+						context.fillStyle = "#333333";
+					context.fillRect(60+100*(3-i),100,50,50);
+					context.strokeRect(60+100*(3-i),100,50,50);
+				}
+				
+				//Minuten
+				for(i=0;i<6;i++){
+					if(((1<<i) & m) > 0)
+						context.fillStyle = "#FF0000";
+					else
+						context.fillStyle = "#333333";
+					context.fillRect(50+70*(5-i),300,50,50);
+					context.strokeRect(50+70*(5-i),300,50,50);
+				}
+			}
+
+			this.start();
+		}
+
+	</script>
+
+</head>
+<body onload="init()">
+
+<br>
+<center>
+<canvas id="uhr" width="500" height="500">
+</canvas>
+</center>
+
+</body>
+</html>
